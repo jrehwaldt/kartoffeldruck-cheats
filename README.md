@@ -6,7 +6,7 @@ This repository contains useful tips and tricks when using [Kartoffeldruck](http
 
 I use [Justified Gallery](miromannino.github.io/Justified-Gallery) to achieve gallery effects in blog posts. The gallery is loaded on browser side and (unfortunately; *depends: won't work with responsive designs*) not pre-rendered.
 
-![Gallery](gallery.png)
+![Gallery](gallery.jpg)
 
 Install it using bower (`bower install --save justified-gallery`), setup grunt or gulp to copy necessary assets (css and js files) and reference those in your base template.
 
