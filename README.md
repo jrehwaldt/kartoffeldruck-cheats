@@ -32,32 +32,47 @@ Install it using bower (`bower install --save justified-gallery`), setup grunt o
 
 The gallery gets applied on all elements with class `image-gallery`. In order to simplify gallery creation create a nunjucks macro at  `/templates/macro/image-gallery.html`:
 ```
-{% set gallery_num = 0 %}
 {% macro image_gallery(images, galleryId='', className='') %}
-  {% set groupId = 'image-group-' + gallery_num %}
   {% if galleryId == '' %}
-    {% set galleryId = 'gallery-' + gallery_num %}
+    {% set galleryId = 'gallery-' + ('gallery' | sequence) %}
   {% endif %}
-  <figure id="{{ groupId }}" class="image-gallery {{ className }}">
+  <figure id="image-gallery-{{ 'image-gallery-id' | sequence }}" class="image-gallery {{ className }}">
     {% for image in images %}
       {% set src = image %}
       {% if image | isObject %}
         {% set src = image.src %}
         {% set alt = image.caption %}
       {% endif %}
-      <a href="{{ src }}" title="{{ alt }}" rel="{{ galleryId }}">
-        <img src="{{ src }}" />
+      <a href="{{ src | imageSize(1024) }}" title="{{ alt }}" data-gallery="{{ galleryId }}">
+        <img src="{{ src | imageSize(100) }}" alt="{{ alt }}" />
       </a>
     {% endfor %}
   </figure>
-  {% set gallery_num = gallery_num + 1 %}
 {% endmacro %}
+
 ```
 
-In order to use `isObject` as filter it needs to be registered in your `kartoffeldruck.js`:
+In order to use `isObject` and `sequence` as filter those needs to be registered in your `kartoffeldruck.js`:
 ```
 nunjucks.addFilter('isObject', require('lodash/lang/isObject'));
+nunjucks.addFilter('sequence', require('.helpers/sequence'));
 ```
+
+with `/helpers/sequence.js` being an unique ID generator
+```
+var sequence = {};
+
+module.exports = function sequence(group)  {
+  if (sequence[group] === undefined) {
+    var val = sequence[group] = 0;
+  } else {
+    var val = sequence[group]++;
+  }
+  return val;
+};
+```
+
+**Note**: A previous version of this file proposed another technique for ID generation, which resulted in duplicated IDs on pages with calls to `render` (e.g. paginated overview page).
 
 This macro has some features not strictly necessary for justified gallery:
 * You could omit the id on `<figure id="...">` and purge `groupId`.
