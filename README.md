@@ -55,7 +55,7 @@ The gallery gets applied on all elements with class `image-gallery`. In order to
 In order to use `isObject` and `sequence` as filter those needs to be registered in your `kartoffeldruck.js`:
 ```
 nunjucks.addFilter('isObject', require('lodash/lang/isObject'));
-nunjucks.addFilter('sequence', require('.helpers/sequence'));
+nunjucks.addFilter('sequence', require('./helpers/sequence'));
 ```
 
 with `/helpers/sequence.js` being an unique ID generator
